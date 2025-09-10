@@ -1,111 +1,282 @@
-
-import { useEffect } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import Sponsors from "../components/Sponsors";
 import Contactus from "../components/Contactus";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { postRequest } from '../service/Axios';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { MatchContext } from "../context/MatchContext";
+
 const Dashboard = () => {
+    const { currentmatch, nextMatch, teams } = useContext(MatchContext);
 
-    const location = useLocation();
+    const navigate = useNavigate()
+    const handdleteam = () => {
+        navigate('/live-score')
+    }
 
+    const stadiumVideos = [
+        {
+            id: 1,
+            url: "video/igstadium.mp4",
+            title: "I.G Stadium",
+            description: "Explore the stadium facilities and surroundings",
+        },
+        {
+            id: 2,
+            url: "video/Chümoukedimastadium.mp4",
+            title: "Chumoukedima Football Stadium, Chumoukedima",
+            description: "Explore the stadium facilities and surroundings",
+        }
+    ];
 
-    // useEffect(() => {
-    //     if (location.hash) {
-    //         const section = document.querySelector(location.hash);
-    //         if (section) {
-    //             section.scrollIntoView({ behavior: "smooth", block: "start" });
-    //         }
-    //     }
-    // }, [location]);
-    const teams = [
+    const highlightVideos = [
         {
-            img: "nsf/ChümoukedimaWarriors.jpg",
-            name: "Chümoukedima Warriors",
-            desc: "Fearless and united team spirit",
+            id: 1,
+            url: "https://www.youtube.com/embed/tgbNymZ7vqY",
+            title: "INUS FC vs Mizoram Highlights",
+            description: "Best goals & moments from the match",
         },
         {
-            img: "nsf/66309492_1728147677_1.jpg",
-            name: "Nagaland Tigers",
-            desc: "Strength. Passion. Determination.",
-        },
-        {
-            img: "nsf/98535062_1728147634_2.webp",
-            name: "Dimapur Royals",
-            desc: "Royal attitude, royal play",
-        },
-        {
-            img: "images/img_1.jpg",
-            name: "XYZ Strikers",
-            desc: "Fast and furious on the field",
-        },
-        {
-            img: "images/img_2.jpg",
-            name: "ashish",
-            desc: "Fast and furious on the field",
-        },
-        {
-            img: "images/img_3.jpg",
-            name: "inus fc",
-            desc: "Fast and furious on the field",
-        },
-        {
-            img: "images/bg_2.jpg",
-            name: "imsu fc",
-            desc: "Fast and furious on the field",
+            id: 2,
+            url: "https://www.youtube.com/embed/5qap5aO4i9A",
+            title: "Nagaland vs Inus Test Highlights",
+            description: "Full highlights of the exciting game",
         },
     ];
 
-    return (
-
-        <>
-            <div className="container" id="matches">
-                <div className="row">
-                    <div className="col-lg-12">
-
-                        <div className="d-flex team-vs">
-                            <span className="score">4-1</span>
-                            <div className="team-1 w-50">
-                                <div className="team-details w-100 text-center">
-                                    <img src="images/logo_1.png" alt="Image" className="img-fluid" />
-                                    <h3>Kohima United <span>(win)</span></h3>
-                                    <ul className="list-unstyled">
-                                        <li>inus daimary (12)</li>
-                                        <li>Ashish (7)</li>
-                                        <li>imsu (10)</li>
-                                        <li>xxxxxx (5)</li>
-                                    </ul>
+    const VideoGrid = ({ title, videos }) => (
+        <div className="site-section bg-dark ">
+            <div className="container" style={{ marginTop: "-9%" }}>
+                <div className="section-title text-center mb-5">
+                    <h2 className="text-white fw-bold">{title}</h2>
+                    <p className="text-secondary">
+                        Watch the best videos in this category
+                    </p>
+                </div>
+                <div className="row" style={{ justifyContent: "center" }}>
+                    {videos.map((video, index) => (
+                        <div key={index} className="col-lg-4 col-md-6 mb-4">
+                            <div className="card shadow-lg border-0 rounded-3 overflow-hidden h-100">
+                                <div className="ratio ratio-16x9">
+                                    <video
+                                        src={video.url}
+                                        controls
+                                        controlsList="nodownload"
+                                        disablePictureInPicture
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    ></video>
                                 </div>
-                            </div>
-
-                            <div className="team-2 w-50">
-                                <div className="team-details w-100 text-center">
-                                    <img src="images/logo_2.png" alt="Image" className="img-fluid" />
-                                    <h3>Chümoukedima Warriors <span>(loss)</span></h3>
-                                    <ul className="list-unstyled">
-                                        <li>Temjen (3)</li>
-                                        <li>Imkong (8)</li>
-                                        <li>xxxxxxx (9)</li>
-                                        <li>xxxxxxxxxx (5)</li>
-                                    </ul>
+                                <div className="card-body bg-light text-center">
+                                    <h5 className="card-title text-dark">{video.title}</h5>
+                                    <p className="card-text text-muted">{video.description}</p>
                                 </div>
                             </div>
                         </div>
+                    ))}
+                </div>
+
+
+
+            </div>
+        </div>
+    );
+
+
+
+    return (
+        <>
+            <div className="bg">
+                <div className="container" id="matches">
+                    <div className="row">
+                        <div className="col-lg-12">
+                            {currentmatch && currentmatch.length > 0 ? (
+                                currentmatch.some(item => item.status === 1) ? (
+                                    // ✅ Show only matches with status = 1
+                                    currentmatch
+                                        .filter(item => item.status === 1)
+                                        .map((item, index) => {
+                                            const matchDate = new Date(item.match_time);
+                                            const now = new Date();
+
+                                            const durationMs = now - matchDate;
+                                            const durationMinutes = Math.floor(durationMs / 60000);
+
+                                            let islive = 1;
+                                            if (now > matchDate) {
+                                                if (durationMinutes > 95) {
+                                                    islive = 0;
+                                                } else {
+                                                    islive = 1;
+                                                }
+                                            } else {
+                                                islive = 0;
+                                            }
+
+                                            const gradients = [
+                                                ["#1abc9c", "#16a085"],
+                                                ["#3498db", "#2c3e50"],
+                                                ["#9b59b6", "#8e44ad"],
+                                                ["#e67e22", "#d35400"],
+                                                ["#2ecc71", "#27ae60"],
+                                                ["#e74c3c", "#c0392b"],
+                                                ["#f39c12", "#f1c40f"],
+                                            ];
+
+                                            const [color1, color2] = gradients[index % gradients.length];
+
+                                            return (
+                                                <div
+                                                    className="card my-3 text-white border-0"
+                                                    key={item.schedule_id}
+                                                    style={{
+                                                        background: `linear-gradient(135deg, ${color1}, ${color2})`,
+                                                    }}
+                                                >
+                                                    {/* Stadium Name on top */}
+                                                    <div
+                                                        className="card-header text-center border-0"
+                                                        style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+                                                    >
+                                                        <h5 className="mb-0">{item.stadium}</h5>
+                                                    </div>
+
+                                                    <h5
+                                                        style={{
+                                                            color: 'red',
+                                                            marginLeft: '5px',
+                                                            fontSize: '14px',
+                                                            animation: 'blink 1s infinite'
+                                                        }}
+                                                    >
+                                                        On Live
+                                                    </h5>
+
+                                                    <style>
+                                                        {`
+                                                            @keyframes blink {
+                                                                0%, 50%, 100% { opacity: 1; }
+                                                                25%, 75% { opacity: 0; }
+                                                            }
+                                                            `}
+                                                    </style>
+
+                                                    <div className="card-body" onClick={handdleteam}>
+                                                        <div className="row align-items-center text-center">
+                                                            {/* Team 1 */}
+                                                            <div className="col-12 col-md-5 mb-3 mb-md-0">
+                                                                <img
+                                                                    src={`${item.APP_URL}/${item.team1_logo}`}
+                                                                    alt={item.team1_name}
+                                                                    className="img-fluid"
+                                                                    style={{ cursor: "pointer", maxHeight: "80px" }}
+                                                                />
+                                                                <h6 className="mt-2">{item.team1_name}</h6>
+                                                            </div>
+
+                                                            {/* Middle - LIVE + Score + VS */}
+                                                            <div className="col-12 col-md-2 mb-3 mb-md-0">
+                                                                {islive === 1 && (
+                                                                    <div className="live-indicator mb-2">
+                                                                        <span className="dot"></span>{" "}
+                                                                        <span className="live-text">LIVE</span>
+                                                                    </div>
+                                                                )}
+                                                                <div className="fw-bold fs-5">
+                                                                    {item.team1_points}-{item.team2_points}
+                                                                </div>
+                                                                <div className="fw-bold">VS</div>
+                                                            </div>
+
+                                                            {/* Team 2 */}
+                                                            <div className="col-12 col-md-5">
+                                                                <img
+                                                                    src={`${item.APP_URL}/${item.team2_logo}`}
+                                                                    alt={item.team2_name}
+                                                                    className="img-fluid"
+                                                                    style={{ cursor: "pointer", maxHeight: "80px" }}
+                                                                />
+                                                                <h6 className="mt-2">{item.team2_name}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                ) : (
+                                    <div
+                                        className="card my-3 text-white border-0"
+                                        style={{
+                                            background: "linear-gradient(135deg, #34495e, #2c3e50)",
+                                        }}
+                                    >
+                                        <div
+                                            className="card-header text-center border-0"
+                                            style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+                                        >
+                                            <h5 className="mb-0">No Scheduled Matches</h5>
+                                        </div>
+                                        <div className="card-body text-center">
+                                            <p className="mb-3 fs-6">
+                                                ⚽ Currently, there are <b>no live matches</b> right now.
+                                                Stay tuned for upcoming fixtures and live updates!
+                                            </p>
+                                            {/* <div className="d-flex justify-content-center gap-3 flex-wrap">
+                                                <span className="badge bg-info">Latest Results</span>
+                                                <span className="badge bg-warning">Upcoming Fixtures</span>
+                                                <span className="badge bg-success">Team Rankings</span>
+                                            </div> */}
+                                        </div>
+                                    </div>
+
+                                )
+                            ) : (
+                                <div
+                                    className="card my-3 text-white border-0"
+                                    style={{
+                                        background: "linear-gradient(135deg, #34495e, #2c3e50)",
+                                    }}
+                                >
+                                    <div
+                                        className="card-header text-center border-0"
+                                        style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+                                    >
+                                        <h5 className="mb-0">No Scheduled Matches</h5>
+                                    </div>
+                                    <div className="card-body text-center">
+                                        <p className="mb-3 fs-6">
+                                            Currently, there are no matches scheduled. Stay tuned for upcoming fixtures and live updates!
+                                        </p>
+                                        <div className="d-flex justify-content-center gap-3">
+                                            <span className="badge bg-info">Latest Results</span>
+                                            <span className="badge bg-warning">Upcoming Fixtures</span>
+                                            <span className="badge bg-success">Team Rankings</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            )}
+
+                        </div>
                     </div>
                 </div>
+
+                {/* <div className="row">
+                    <div className="col-12 text-center">
+                        <img src="./images/nsf.png" alt="logo" className="img-fluid" />
+                    </div>
+                </div> */}
+
+
             </div>
-            
-            <div className="row">
-                <div className="col-12 text-center">
-                    <img src="./images/nsf.png" alt="logo" className="img-fluid" />
-                </div>
-            </div>
-            <div className="latest-news py-5" id="Players">
+
+
+            <div className="latest-news py-5" id="Players" >
                 <div className="container">
                     <div className="row">
                         <div className="col-12 title-section text-center mb-4">
@@ -130,14 +301,17 @@ const Dashboard = () => {
                             <SwiperSlide key={index}>
                                 <div className="card border-0 shadow-lg h-100 text-center">
                                     <img
-                                        src={team.img}
-                                        alt={team.name}
+                                        src={
+                                            team.teamimage
+                                                ? team.APP_URL + "/" + team.teamlogo
+                                                : team.APP_URL + "/" + team.teamlogo
+                                        }
+                                        alt={team.team_name}
                                         className="card-img-top rounded"
                                         style={{ height: "250px", objectFit: "cover" }}
                                     />
                                     <div className="card-body">
-                                        <h5 className="fw-bold">{team.name}</h5>
-                                        <p className="text-muted">{team.desc}</p>
+                                        <h5 className="fw-bold">{team.team_name}</h5>
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -149,41 +323,76 @@ const Dashboard = () => {
             <div className="site-section bg-dark">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-6">
-                            <div className="widget-next-match">
-                                <div className="widget-title">
-                                    <h3>Next Match</h3>
-                                </div>
-                                <div className="widget-body mb-3">
-                                    <div className="widget-vs">
-                                        <div className="d-flex align-items-center justify-content-around justify-content-between w-100">
-                                            <div className="team-1 text-center">
-                                                <img src="images/logo_1.png" alt="Image" />
-                                                <h3>Football League</h3>
-                                            </div>
-                                            <div>
-                                                <span className="vs"><span>VS</span></span>
-                                            </div>
-                                            <div className="team-2 text-center">
-                                                <img src="images/logo_2.png" alt="Image" />
-                                                <h3>Soccer</h3>
+                        {nextMatch ? nextMatch.map((match, index) => (
+                            <div className="col-lg-6" key={index}>
+                                <div className="widget-next-match">
+                                    <div className="widget-title">
+                                        <h3>Next Match</h3>
+                                    </div>
+                                    <div className="widget-body mb-3">
+                                        <div className="widget-vs">
+                                            <div className="d-flex align-items-center justify-content-around justify-content-between w-100">
+                                                {/* Team 1 */}
+                                                <div className="team-1 text-center">
+                                                    <img
+                                                        src={`${match.APP_URL}/${match.team1_logo}`}
+                                                        alt={match.team1_name}
+                                                        style={{ height: "80px" }}
+                                                    />
+                                                    <h3>{match.team1_name}</h3>
+                                                </div>
+                                                <div>
+                                                    <span className="vs"><span>VS</span></span>
+                                                </div>
+                                                {/* Team 2 */}
+                                                <div className="team-2 text-center">
+                                                    <img
+                                                        src={`${match.APP_URL}/${match.team2_logo}`}
+                                                        alt={match.team2_name}
+                                                        style={{ height: "80px" }}
+                                                    />
+                                                    <h3>{match.team2_name}</h3>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="text-center widget-vs-contents mb-4">
-                                    <h4>NSF Martyrs’ Memorial Trophy 2025</h4>
-                                    <p className="mb-5">
-                                        <span className="d-block">13 Sep 2025</span>
-                                        <span className="d-block">16:00 IST</span>
-                                        <strong className="text-primary">Indira Gandhi Stadium, Kohima</strong>
-                                    </p>
+                                    {/* Tournament & Match Time */}
+                                    <div className="text-center text-white widget-vs-contents mb-4">
+                                        <h4>{match.tournament_type}</h4>
+                                        <p className="mb-5">
+                                            <span className="d-block">
+                                                {new Date(match.match_time).toLocaleDateString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "short",
+                                                    year: "numeric",
+                                                })}
+                                            </span>
+                                            <span className="d-block">
+                                                {new Date(match.match_time).toLocaleTimeString("en-GB", {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })} IST
+                                            </span>
+                                            <strong className="text-primary">{match.stadium}</strong>
+                                        </p>
 
-                                    <div id="date-countdown2" className="pb-1"></div>
+                                        <div id={`date-countdown-${index}`} className="pb-1"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )) : <div className="text-center widget-vs-contents mb-4">
+                            <h4>No Scheduled Match</h4>
+                            <p className="mb-5">
+                                <span className="d-block">--</span>
+                                <span className="d-block">--</span>
+                                <strong className="text-primary">--</strong>
+                            </p>
+                        </div>}
+                    </div>
+
+                    {/* <div className="row mt-3">
+
                         <div className="col-lg-6">
 
                             <div className="widget-next-match">
@@ -237,17 +446,27 @@ const Dashboard = () => {
                             </div>
 
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
+
+            <VideoGrid title="🏟️ Stadium Videos" videos={stadiumVideos} />
+            {/* <VideoGrid title="🎥 Match Highlights" videos={highlightVideos} /> */}
+
+
+
+
             <div className="row bg">
                 <Sponsors />
-                <Contactus />
+                {/* <Contactus /> */}
             </div>
+
+
 
         </>
     )
+
 
 }
 

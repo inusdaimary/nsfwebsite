@@ -28,13 +28,25 @@ const MainHeader = () => {
                 <div className="container">
                     <div className="d-flex align-items-center justify-content-between">
                         {/* Logo */}
-                        <div className="site-logo">
-                            <h2
-                                className="m-0 fw-bold"
-                                style={{ color: "#fff", letterSpacing: "2px" }}
-                            >
-                                NSF
-                            </h2>
+                       
+                            <div className="site-logo">
+                                {/* <p style={{ color: "white" }}>Naga Students' Federation</p>
+                             */}
+                                <img
+                                    src="nsf/nsf.jpeg"
+                                    alt=""
+                                    className="band_logo"
+                                    style={{
+
+                                        width: "40px",
+                                        height: "40px",
+                                        borderRadius: "50%",
+                                        objectFit: "cover",
+
+                                    }}
+                                />
+
+                       
                         </div>
 
                         {/* Desktop Nav */}

@@ -12,7 +12,7 @@ const Contactus = () => {
                         <div className="row g-4">
 
                             <div className="col-lg-7">
-                                <h3 className="mb-4 fw-bold">Get in Touch</h3>
+                                <h3 className="mb-4 fw-bold">Contact for sponsorship</h3>
                                 <form action="#">
                                     <div className="mb-3">
                                         <input type="text" className="form-control form-control-lg" placeholder="Your Name" required />
@@ -40,18 +40,18 @@ const Contactus = () => {
                                         <li className="mb-3">
                                             <i className="bi bi-geo-alt-fill me-2"></i>
                                             <strong>Address:</strong><br />
-                                            <span className="ms-4">3rd Mile.Dimapur, Nagaland</span>
+                                            <span className="ms-4"></span>
                                         </li>
                                         <li className="mb-3">
                                             <i className="bi bi-envelope-fill me-2"></i>
                                             <strong>Email:</strong><br />
-                                            <span className="ms-4"><a href="mailto:inusdaimary@gmail.com" className="text-white text-decoration-none">inusdaimary@gmail.com</a></span>
+                                            <span className="ms-4"><a href="#" className="text-white text-decoration-none">customercare@bingeboxx.com</a></span>
 
                                         </li>
                                         <li>
                                             <i className="bi bi-telephone-fill me-2"></i>
                                             <strong>Phone:</strong><br />
-                                            <span className="ms-4"><a href="tel:+910000000000" className="text-white text-decoration-none">+91 000-00-000-00</a></span>
+                                            <span className="ms-4"><a href="tel:+910000000000" className="text-white text-decoration-none">+91-87942 44328</a></span>
                                         </li>
                                     </ul>
                                 </div>

@@ -21,18 +21,24 @@ const Footer = () => {
                         <h5 className="text-uppercase">Tickets</h5>
                         <ul className="list-unstyled">
                             <li><a href="#!">Online Ticket</a></li>
-                            <li><a href="#!">Payment and Prices</a></li>
-                            <li><a href="#!">Contact &amp; Booking</a></li>
-                            <li><a href="#!">Coupon</a></li>
+                             {/* <li><a href="/pricing-details">Pricing Details</a></li> */}
+                            <li><a href="/contac-us">Contact Us</a></li>
+
+                            {/* <li><a href="#!">Coupon</a></li> */}
+                            {/* <li><a href="/player-form">Team Form</a></li> */}
+
                         </ul>
                     </div>
 
                     <div className="col-md-3 mb-md-0 mb-3">
-                        <h5 className="text-uppercase">Social</h5>
+                        <h5 className="text-uppercase">Info</h5>
                         <ul className="list-unstyled">
-                            <li><a href="#">Twitter</a></li>
-                            <li><a href="#">Facebook</a></li>
-                            <li><a href="#">Instagram</a></li>
+                            <li><a href="/about-us">About Us</a></li>
+                            <li><a href="/terms-conditions">Terms & Conditions</a></li>
+                            <li><a href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a href="/refund-policy">Refund Policy</a></li>
+
+                            
                         </ul>
                     </div>
                 </div>

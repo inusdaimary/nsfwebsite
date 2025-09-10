@@ -17,7 +17,52 @@ const Header = () => {
                 <div className="container">
                     <div className="d-flex align-items-center">
                         <div className="site-logo">
-                            <p style={{ color: "white" }}>NSF</p>
+                            {/* <p style={{ color: "white" }}>Naga Students' Federation</p>
+                             */}
+                            <img
+                                src="nsf/nsf.jpeg"
+                                alt=""
+                                className="band_logo"
+                                style={{
+                                    marginTop: '-21px',
+                                    width: "90px",
+                                    height: "90px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    marginRight: "5px"
+
+                                }}
+                            />
+
+                            <img
+                                src="nsf/25thNSFAnniversarylogo.png"
+                                alt=""
+                                className="band_logo"
+                                style={{
+                                    marginTop: '-21px',
+                                    width: "110px",
+                                    height: "110px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+
+                                }}
+                            />
+                            <img
+                                src="nsf/nsflogo.jpg"
+                                alt=""
+                                className="band_logo"
+                                style={{
+                                    marginTop: '-21px',
+                                    width: "90px",
+                                    height: "90px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+
+
+                                }}
+                            />
+
+
                         </div>
                         <div className="ml-auto">
                             <nav className="site-navigation position-relative text-right" role="navigation">
