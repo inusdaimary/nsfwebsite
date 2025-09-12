@@ -27,7 +27,7 @@ function Layout() {
           <Route path="/" element={<Herosection />} />
           <Route path="/Book-Ticket" element={<BookTicket />} />
           <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/player-form" element={<PlayerForm />} />
+          {/* <Route path="/player-form" element={<PlayerForm />} /> */}
           <Route path="/live-score" element={<LiveScore />} />
           <Route path="/pricing-details" element={<PricingDetails />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />
@@ -43,7 +43,7 @@ function Layout() {
         </Routes>
         <ScrollToTopButton />
       </MatchProvider>
-      {location.pathname === '/player-form' ? '' : <Footer />}
+      {location.pathname === '/player-form' ? 'No Page  Available' : <Footer />}
     </>
   );
 }

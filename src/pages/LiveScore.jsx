@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
-import { postRequest } from '../service/Axios';
+import { postRequest ,  apiurl} from '../service/Axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Loader from "../components/Loader";
 import { MatchContext } from "../context/MatchContext";
@@ -41,7 +41,7 @@ const LiveScore = () => {
             <div className="container-fluid d-flex align-items-center justify-content-center" style={{
                 minHeight: "100vh",
                 paddingTop: "15vh",
-                backgroundImage: `url("http://localhost:5173/public/images/bg_7.jpg")`,
+                backgroundImage: `url("https://nsftrophy.bingeboxx.com/images/bg_7.jpg")`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

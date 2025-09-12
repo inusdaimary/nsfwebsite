@@ -2,7 +2,8 @@ import axios from 'axios';
 // http://localhost:3081
 // https://nsfapi.bingeboxx.com
 
-const   apiurl =  "http://localhost:3081"
+
+const   apiurl = "http://localhost:3081"
 
 const axiosInstance = axios.create({
   baseURL: apiurl,

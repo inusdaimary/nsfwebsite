@@ -312,6 +312,7 @@ const Dashboard = () => {
                                     />
                                     <div className="card-body">
                                         <h5 className="fw-bold">{team.team_name}</h5>
+                                        <h5 className="text-mute" style={{fontSize:"12px"}}>{team.state}</h5>
                                     </div>
                                 </div>
                             </SwiperSlide>

@@ -1,9 +1,8 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
-import { postRequest } from '../service/Axios';
+import { postRequest,  apiurl} from '../service/Axios';
 
 import io from "socket.io-client";
-const socket = io("http://localhost:3081");
-
+const socket = io(`${apiurl}`);
 
 export const MatchContext = createContext();
 
@@ -23,6 +22,7 @@ export const MatchProvider = ({ children }) => {
         setNextMatch(response.datalist.upcomingMatches);
         setTeams(response.datalist.teams);     
       }
+      
     } catch (error) {
       console.error("Error fetching match:", error);
     }

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { MatchContext } from "../context/MatchContext";
 import { postRequest, apiurl } from "../service/Axios";
 import aboutBg from "../../public/images/bg_1.jpg";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Alert } from "react-bootstrap";
 import Loader from "../../src/components/Loader"
 const BookTicket = () => {
   const { currentmatch } = useContext(MatchContext)
@@ -13,6 +13,7 @@ const BookTicket = () => {
   const totalPrice = persons * pricePerPerson;
   const [loading, setloading] = useState(false)
   const [remark, setRemarks] = useState('')
+  const [matchesdate, setmatchesdate] = useState(null)
 
   const [bookTicket, setBookTicket] = useState({
     fullname: "",
@@ -27,10 +28,26 @@ const BookTicket = () => {
 
   const [notifications, setnotifications] = useState([]);
 
+
   const handleBookingTicket = (e) => {
     const { name, value } = e.target;
-    setBookTicket({ ...bookTicket, [name]: value })
+
+
+    if (name === "schedule_id") {
+
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      const dateAttr = selectedOption?.getAttribute("data-date");
+
+
+      if (dateAttr) {
+        const decodedDate = new Date(dateAttr).toISOString().split("T")[0];
+        setmatchesdate(decodedDate);
+      }
+    }
+
+    setBookTicket((prev) => ({ ...prev, [name]: value }));
   };
+
 
 
   useEffect(() => {
@@ -70,7 +87,7 @@ const BookTicket = () => {
         setnotifications(response.notifications)
       }
     } catch (error) {
-          console.log(error?.message)
+      console.log(error?.message)
     }
   }
 
@@ -101,7 +118,10 @@ const BookTicket = () => {
       return;
     }
 
-    if (totalPrice == 0) {
+      
+    if (matchesdate == '2025-09-13') {
+
+    
       const formData = new FormData();
       formData.append("persons", persons);
       formData.append("totalPrice", totalPrice);
@@ -136,6 +156,7 @@ const BookTicket = () => {
       return
     }
 
+
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
       alert("Razorpay SDK failed to load. Check your internet connection.");
@@ -161,7 +182,6 @@ const BookTicket = () => {
         alert("❌ Failed to create order. Try again!");
         return;
       }
-
 
 
       const options = {
@@ -248,7 +268,7 @@ const BookTicket = () => {
         }}
       >
 
-
+        {/* 
         <motion.div
           initial={{ y: -60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -290,84 +310,10 @@ const BookTicket = () => {
               ))}
             </div>
           </div>
-        </motion.div>
-
-
+        </motion.div> */}
 
 
         <div className="row w-100 justify-content-center g-5">
-          {/* Ticket Preview (Left) */}
-          <motion.div
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.7 }}
-            className="col-lg-6"
-          >
-            {currentmatch
-              .filter((matches) => new Date(matches.match_time) >= new Date())
-              .map((matches) => (
-                <div
-                  className="card border-0 shadow-lg rounded-4 p-4 mb-4"
-                  key={matches.schedule_id}
-                  style={{
-                    background: "rgba(0, 0, 0, 0.6)",
-                    backdropFilter: "blur(12px)",
-                    color: "#fff",
-                  }}
-                >
-                  <div className="d-flex align-items-center justify-content-between mb-3">
-                    <h4 className="fw-bold text-warning mb-0">
-                      {matches.tournament_type}
-                    </h4>
-                    <span className="badge bg-light text-dark px-3 py-2">🎟 Ticket</span>
-                  </div>
-
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="text-center">
-                      <img
-                        src={`${matches.APP_URL}/${matches.team1_logo}`}
-                        alt={matches.team1_name}
-                        style={{ width: "70px", height: "70px", objectFit: "contain" }}
-                      />
-                      <p className="mt-2 fw-bold">{matches.team1_name}</p>
-                    </div>
-                    <h2 className="fw-bold text-light">VS</h2>
-                    <div className="text-center">
-                      <img
-                        src={`${matches.APP_URL}/${matches.team2_logo}`}
-                        alt={matches.team2_name}
-                        style={{ width: "70px", height: "70px", objectFit: "contain" }}
-                      />
-                      <p className="mt-2 fw-bold">{matches.team2_name}</p>
-                    </div>
-                  </div>
-
-                  <hr className="border-light" />
-
-                  <p className="mb-2">
-                    <i className="bi bi-geo-alt me-2"></i>{" "}
-                    <strong style={{ fontSize: "22px" }}>
-                      {matches.stadium || "Venue TBA"}
-                    </strong>
-                  </p>
-                  <p className="mb-2">
-                    <i className="bi bi-calendar-event me-2"></i>{" "}
-                    {new Date(matches.match_time).toLocaleString()}
-                  </p>
-
-                  <div className="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <small className="text-light">Price</small>
-                      <h5 className="fw-bold text-success mb-0">₹{totalPrice == 0 ? '' : totalPrice} {remark}</h5>
-                    </div>
-                    <button className="btn btn-outline-warning btn-sm fw-bold">
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-          </motion.div>
 
           {/* Booking Form (Right) */}
           <motion.div
@@ -379,7 +325,7 @@ const BookTicket = () => {
             <div
               className="card border-0 rounded-4 shadow-lg mx-auto"
               style={{
-                background: "rgba(255, 255, 255, 0.1)",
+                background: "rgba(0, 0, 218, 0.1)",
                 backdropFilter: "blur(20px) saturate(180%)",
                 WebkitBackdropFilter: "blur(20px) saturate(180%)",
                 border: "1px solid rgba(255, 255, 255, 0.25)",
@@ -474,11 +420,13 @@ const BookTicket = () => {
                           .filter((m) => m.stadium === bookTicket.stadium)
                           .map((m) => {
                             const matchDate = new Date(m.match_time);
+
                             const now = new Date();
                             const isExpired = matchDate < now;
 
                             return (
                               <option
+                                data-date={matchDate}
                                 key={m.schedule_id}
                                 value={isExpired ? "" : m.schedule_id}
                                 disabled={isExpired}
@@ -518,7 +466,8 @@ const BookTicket = () => {
 
                   {/* Price */}
                   <div className="alert alert-success text-center fw-bold shadow-sm">
-                    🎟️ Total Price: ₹{totalPrice == 0 ? '' : totalPrice}   <span style={{ color: "green" }}>{remark}</span>
+                    🎟️ Total Price: ₹{matchesdate == '2025-09-13' ? <span style={{ color: "green" }}>Free</span> : totalPrice}
+
                   </div>
 
                   {/* Submit */}
@@ -543,6 +492,89 @@ const BookTicket = () => {
 
 
           </motion.div>
+
+
+          {/* Ticket Preview (Left) */}
+          <motion.div
+            initial={{ x: -80, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.7 }}
+            className="col-lg-6"
+          >
+            {currentmatch
+              .filter((matches) => new Date(matches.match_time) >= new Date())
+              .map((matches) => {
+                const matchDateTime = new Date(matches.match_time);
+                const freeMatchDateTime = new Date("2025-09-13T16:30:00");
+                const isFree =
+                  matchDateTime.getTime() === freeMatchDateTime.getTime();
+
+                return (
+                  <div
+                    className="card border-0 shadow-lg rounded-4 p-4 mb-4"
+                    key={matches.schedule_id}
+                    style={{
+                      background: "rgba(0, 0, 0, 0.6)",
+                      backdropFilter: "blur(12px)",
+                      color: "#fff",
+                    }}
+                  >
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                      <h4 className="fw-bold text-warning mb-0">
+                        {matches.tournament_type}
+                      </h4>
+                      <span className="badge bg-light text-dark px-3 py-2">🎟 Ticket</span>
+                    </div>
+
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="text-center">
+                        <img
+                          src={`${matches.APP_URL}/${matches.team1_logo}`}
+                          alt={matches.team1_name}
+                          style={{ width: "70px", height: "70px", objectFit: "contain" }}
+                        />
+                        <p className="mt-2 fw-bold">{matches.team1_name}</p>
+                      </div>
+                      <h2 className="fw-bold text-light">VS</h2>
+                      <div className="text-center">
+                        <img
+                          src={`${matches.APP_URL}/${matches.team2_logo}`}
+                          alt={matches.team2_name}
+                          style={{ width: "70px", height: "70px", objectFit: "contain" }}
+                        />
+                        <p className="mt-2 fw-bold">{matches.team2_name}</p>
+                      </div>
+                    </div>
+
+                    <hr className="border-light" />
+
+                    <p className="mb-2">
+                      <i className="bi bi-geo-alt me-2"></i>{" "}
+                      <strong style={{ fontSize: "22px" }}>
+                        {matches.stadium || "Venue TBA"}
+                      </strong>
+                    </p>
+                    <p className="mb-2">
+                      <i className="bi bi-calendar-event me-2"></i>{" "}
+                      {matchDateTime.toLocaleString()}
+                    </p>
+
+                    <div className="d-flex justify-content-between align-items-center mt-3">
+                      <div>
+                        <small className="text-light">Price</small>
+                        <h5 className="fw-bold text-success mb-0">
+                          {isFree ? "Free" : `₹${totalPrice} ${remark}`}
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+
+          </motion.div>
+
+
 
 
         </div>

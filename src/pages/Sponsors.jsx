@@ -117,11 +117,12 @@ const Sponsors = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6 }}
                 className="bg-white shadow-lg rounded-4 p-4 p-md-5 w-100"
-                style={{ maxWidth: "600px", marginTop: "8vh" }}
+                style={{ maxWidth: "600px", marginTop: "6vh" }}
 
             >
                 <h2 className="text-center mb-4 fw-bold text-primary">
-                    Your brand, our stage — let’s grow together 🚀
+                    <span  style={{fontSize:'24px'}}>NSF Martyrs’ Memorial Trophy 2025 🏆</span> <br />
+                   <span  style={{fontSize:"15px"}}>Your brand, our stage — let’s grow together 🚀</span>
                 </h2>
                 <p className="text-center text-muted mb-4">
                     Join us in making football events unforgettable while promoting your
