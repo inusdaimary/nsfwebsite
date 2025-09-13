@@ -73,6 +73,10 @@ div .form-control {
   text-transform: uppercase;
 }
 
+.swiper-pagination-bullets {
+  display: none;
+}
+
 @keyframes blink {
   0% {
     opacity: 1;

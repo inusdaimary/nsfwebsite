@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
-import { postRequest ,  apiurl} from '../service/Axios';
+import { postRequest, apiurl } from '../service/Axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Loader from "../components/Loader";
 import { MatchContext } from "../context/MatchContext";
@@ -87,8 +87,6 @@ const LiveScore = () => {
 
                                             const players = playersData[item.schedule_id] || { team1: [], team2: [] };
 
-                                            console.log(players)
-
                                             return (
                                                 <div
                                                     className="card my-3 text-white border-0"
@@ -118,42 +116,41 @@ const LiveScore = () => {
                                                                 <h6 className="mt-2">{item.team1_name}</h6>
 
                                                                 <ul className="list-unstyled mt-2 d-flex flex-wrap justify-content-center">
-                                                                    {players.players?.team1?.map((p) => (
-                                                                        <li
-                                                                            key={p.player_id}
-                                                                            className="text-center m-2"
-                                                                            style={{ width: "80px" }}
-                                                                        >
-                                                                            {/* Player Photo */}
-                                                                            <img
-                                                                                src={`${p.APP_URL}/${p.photo}`}
-                                                                                alt={p.player_name}
-                                                                                className="img-fluid rounded-circle border"
-                                                                                style={{ width: "50px", height: "50px", objectFit: "cover" }}
-                                                                            />
-
-                                                                            {/* Player Info */}
-                                                                            <div className="mt-1" style={{ fontSize: "12px" }}>
-                                                                                {p.player_name}
-                                                                            </div>
-                                                                            <div style={{ fontSize: "11px", color: "#eee" }}>
-                                                                                #{p.jerseyNo ?? "N/A"}
-                                                                            </div>
-                                                                            <div style={{ fontSize: "11px", fontWeight: "bold" }}>
-                                                                                {p.totalPoints} pts
-                                                                            </div>
-
-                                                                            {/* Role Badge */}
-                                                                            <span
-                                                                                className={`badge mt-1 ${p.isPlaying === 1 ? "bg-success" : "bg-secondary"
-                                                                                    }`}
-                                                                                style={{ fontSize: "10px" }}
+                                                                    {players.players?.team1
+                                                                        ?.filter((p) => p.isPlaying === 1) 
+                                                                        .map((p) => (
+                                                                            <li
+                                                                                key={p.player_id}
+                                                                                className="text-center m-2"
+                                                                                style={{ width: "80px" }}
                                                                             >
-                                                                                {p.role} {p.isPlaying === 1 ? " (Playing)" : " (Sub)"}
-                                                                            </span>
-                                                                        </li>
-                                                                    ))}
+                                                                                <img
+                                                                                    src={`${p.APP_URL}/${p.photo}`}
+                                                                                    alt={p.player_name}
+                                                                                    className="img-fluid rounded-circle border"
+                                                                                    style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                                                                                />
+
+                                                                                <div className="mt-1" style={{ fontSize: "12px" }}>
+                                                                                    {p.player_name}
+                                                                                </div>
+                                                                                <div style={{ fontSize: "11px", color: "#eee" }}>
+                                                                                    #{p.jerseyNo ?? "N/A"}
+                                                                                </div>
+                                                                                <div style={{ fontSize: "11px", fontWeight: "bold" }}>
+                                                                                    {p.totalPoints} pts
+                                                                                </div>
+
+                                                                                <span
+                                                                                    className="badge mt-1 bg-success"
+                                                                                    style={{ fontSize: "10px" }}
+                                                                                >
+                                                                                    {p.role} (Playing)
+                                                                                </span>
+                                                                            </li>
+                                                                        ))}
                                                                 </ul>
+
                                                             </div>
 
                                                             {/* Middle - LIVE + Score + VS */}
@@ -181,37 +178,41 @@ const LiveScore = () => {
                                                                 <h6 className="mt-2">{item.team2_name}</h6>
 
                                                                 <ul className="list-unstyled mt-2 d-flex flex-wrap justify-content-center">
-                                                                    {players.players?.team2?.map((p) => (
-                                                                        <li
-                                                                            key={p.player_id}
-                                                                            className="text-center m-2"
-                                                                            style={{ width: "80px" }}
-                                                                        >
-                                                                            <img
-                                                                                src={`${p.APP_URL}/${p.photo}`}
-                                                                                alt={p.player_name}
-                                                                                className="img-fluid rounded-circle border"
-                                                                                style={{ width: "50px", height: "50px", objectFit: "cover" }}
-                                                                            />
-                                                                            <div className="mt-1" style={{ fontSize: "12px" }}>
-                                                                                {p.player_name}
-                                                                            </div>
-                                                                            <div style={{ fontSize: "11px", color: "#eee" }}>
-                                                                                #{p.jerseyNo ?? "N/A"}
-                                                                            </div>
-                                                                            <div style={{ fontSize: "11px", fontWeight: "bold" }}>
-                                                                                {p.totalPoints} pts
-                                                                            </div>
-                                                                            <span
-                                                                                className={`badge mt-1 ${p.isPlaying === 1 ? "bg-success" : "bg-secondary"
-                                                                                    }`}
-                                                                                style={{ fontSize: "10px" }}
+                                                                    {players.players?.team2
+                                                                        ?.filter((p) => p.isPlaying === 1) 
+                                                                        .map((p) => (
+                                                                            <li
+                                                                                key={p.player_id}
+                                                                                className="text-center m-2"
+                                                                                style={{ width: "80px" }}
                                                                             >
-                                                                                {p.role} {p.isPlaying === 1 ? " (Playing)" : " (Sub)"}
-                                                                            </span>
-                                                                        </li>
-                                                                    ))}
+                                                                                <img
+                                                                                    src={`${p.APP_URL}/${p.photo}`}
+                                                                                    alt={p.player_name}
+                                                                                    className="img-fluid rounded-circle border"
+                                                                                    style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                                                                                />
+
+                                                                                <div className="mt-1" style={{ fontSize: "12px" }}>
+                                                                                    {p.player_name}
+                                                                                </div>
+                                                                                <div style={{ fontSize: "11px", color: "#eee" }}>
+                                                                                    #{p.jerseyNo ?? "N/A"}
+                                                                                </div>
+                                                                                <div style={{ fontSize: "11px", fontWeight: "bold" }}>
+                                                                                    {p.totalPoints} pts
+                                                                                </div>
+
+                                                                                <span
+                                                                                    className="badge mt-1 bg-success"
+                                                                                    style={{ fontSize: "10px" }}
+                                                                                >
+                                                                                    {p.role} (Playing)
+                                                                                </span>
+                                                                            </li>
+                                                                        ))}
                                                                 </ul>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -278,7 +279,7 @@ const LiveScore = () => {
             </div>
 
 
-       <style jsx="true">{`
+            <style jsx="true">{`
                          @media (max-width: 576px) {
                               header, footer {
                                 display:none;

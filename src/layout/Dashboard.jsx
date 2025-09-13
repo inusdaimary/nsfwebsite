@@ -88,7 +88,6 @@ const Dashboard = () => {
     );
 
 
-
     return (
         <>
             <div className="bg">
@@ -97,7 +96,7 @@ const Dashboard = () => {
                         <div className="col-lg-12">
                             {currentmatch && currentmatch.length > 0 ? (
                                 currentmatch.some(item => item.status === 1) ? (
-                                    // ✅ Show only matches with status = 1
+                                  
                                     currentmatch
                                         .filter(item => item.status === 1)
                                         .map((item, index) => {
@@ -289,6 +288,7 @@ const Dashboard = () => {
                         spaceBetween={30}
                         slidesPerView={3}
                         navigation
+                   
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 3000, disableOnInteraction: false }}
                         breakpoints={{
