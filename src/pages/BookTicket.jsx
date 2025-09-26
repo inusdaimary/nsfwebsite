@@ -164,6 +164,7 @@ const BookTicket = () => {
     }
 
 
+
     try {
       const formData = new FormData();
       formData.append("persons", persons);
@@ -191,7 +192,6 @@ const BookTicket = () => {
         name: "Football Tickets",
         description: "Booking Ticket",
         order_id: data.order.id,
-
 
         handler: async function (response) {
           setloading(true);
@@ -502,12 +502,11 @@ const BookTicket = () => {
             className="col-lg-6"
           >
             {currentmatch
-              .filter((matches) => new Date(matches.match_time) >= new Date())
+              .filter((matches) => new Date(matches.match_time).toISOString().split('T')[0] >= new Date().toISOString().split('T')[0])
               .map((matches) => {
                 const matchDateTime = new Date(matches.match_time);
                 const freeMatchDateTime = new Date("2025-09-13T16:30:00");
-                const isFree =
-                  matchDateTime.getTime() === freeMatchDateTime.getTime();
+                const isFree = matchDateTime.getTime() === freeMatchDateTime.getTime();
 
                 return (
                   <div

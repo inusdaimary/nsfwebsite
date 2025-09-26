@@ -28,6 +28,7 @@ export const MatchProvider = ({ children }) => {
     }
   }, []);
 
+  
   useEffect(() => {
     getcurrentmatch();
 

@@ -15,9 +15,25 @@ import { MatchContext } from "../context/MatchContext";
 const Dashboard = () => {
     const { currentmatch, nextMatch, teams } = useContext(MatchContext);
 
+    //   useEffect(()  =>{
+    //         document.addEventListener('contextmenu', (e) => e.preventDefault());
+    //   },[])
+
+    
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentTime(new Date());
+    //     }, 1000); // update every second
+    //     return () => clearInterval(interval);
+    // }, []);
+
+
     const navigate = useNavigate()
     const handdleteam = () => {
         navigate('/live-score')
+
     }
 
     const stadiumVideos = [
@@ -87,7 +103,6 @@ const Dashboard = () => {
         </div>
     );
 
-
     return (
         <>
             <div className="bg">
@@ -96,25 +111,48 @@ const Dashboard = () => {
                         <div className="col-lg-12">
                             {currentmatch && currentmatch.length > 0 ? (
                                 currentmatch.some(item => item.status === 1) ? (
-                                  
                                     currentmatch
-                                        .filter(item => item.status === 1)
+                                        .filter((item) => item.status === 1)
                                         .map((item, index) => {
-                                            const matchDate = new Date(item.match_time);
-                                            const now = new Date();
+                                            const matchDate = new Date(item.match_time.replace(" ", "T"));
+                                            const now = currentTime;
 
-                                            const durationMs = now - matchDate;
-                                            const durationMinutes = Math.floor(durationMs / 60000);
+                                            let islive = 0;
+                                            let timerText = "";
 
-                                            let islive = 1;
-                                            if (now > matchDate) {
-                                                if (durationMinutes > 95) {
+                                            if (now >= matchDate) {
+                                                const durationMs = now - matchDate;
+                                                const totalSeconds = Math.floor(durationMs / 1000);
+                                                const minutes = Math.floor(totalSeconds / 60);
+                                                const seconds = totalSeconds % 60;
+
+                                                if (minutes >= 95) {
                                                     islive = 0;
+                                                    timerText = "FT";
                                                 } else {
                                                     islive = 1;
+
+
+                                                    if (minutes > 90) {
+                                                        timerText = `90+${minutes - 90}:${seconds
+                                                            .toString()
+                                                            .padStart(2, "0")}`;
+                                                    } else if (minutes > 45) {
+                                                        timerText = `45+${minutes - 45}:${seconds
+                                                            .toString()
+                                                            .padStart(2, "0")}`;
+                                                    } else {
+                                                        timerText = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+                                                    }
                                                 }
                                             } else {
+
+                                                const kickoffTime = matchDate.toLocaleTimeString([], {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                });
                                                 islive = 0;
+                                                timerText = `Kickoff ${kickoffTime}`;
                                             }
 
                                             const gradients = [
@@ -137,7 +175,7 @@ const Dashboard = () => {
                                                         background: `linear-gradient(135deg, ${color1}, ${color2})`,
                                                     }}
                                                 >
-                                                    {/* Stadium Name on top */}
+                                                    {/* Stadium Name */}
                                                     <div
                                                         className="card-header text-center border-0"
                                                         style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
@@ -145,24 +183,26 @@ const Dashboard = () => {
                                                         <h5 className="mb-0">{item.stadium}</h5>
                                                     </div>
 
-                                                    <h5
-                                                        style={{
-                                                            color: 'red',
-                                                            marginLeft: '5px',
-                                                            fontSize: '14px',
-                                                            animation: 'blink 1s infinite'
-                                                        }}
-                                                    >
-                                                        On Live
-                                                    </h5>
+                                                    {islive === 1 && (
+                                                        <h5
+                                                            style={{
+                                                                color: "red",
+                                                                marginLeft: "5px",
+                                                                fontSize: "14px",
+                                                                animation: "blink 1s infinite",
+                                                            }}
+                                                        >
+                                                       Live Score
+                                                        </h5>
+                                                    )}
 
                                                     <style>
                                                         {`
-                                                            @keyframes blink {
-                                                                0%, 50%, 100% { opacity: 1; }
-                                                                25%, 75% { opacity: 0; }
-                                                            }
-                                                            `}
+                                                                    @keyframes blink {
+                                                                    0%, 50%, 100% { opacity: 1; }
+                                                                    25%, 75% { opacity: 0; }
+                                                                    }
+                                                                `}
                                                     </style>
 
                                                     <div className="card-body" onClick={handdleteam}>
@@ -178,16 +218,22 @@ const Dashboard = () => {
                                                                 <h6 className="mt-2">{item.team1_name}</h6>
                                                             </div>
 
-                                                            {/* Middle - LIVE + Score + VS */}
+                                                            {/* Score + Timer */}
                                                             <div className="col-12 col-md-2 mb-3 mb-md-0">
                                                                 {islive === 1 && (
-                                                                    <div className="live-indicator mb-2">
-                                                                        <span className="dot"></span>{" "}
-                                                                        <span className="live-text">LIVE</span>
-                                                                    </div>
+                                                                    <>
+                                                                    
+                                                                    </>
+                                                                    // <div className="live-indicator mb-2">
+                                                                    //     <span className="dot"></span>{" "}
+                                                                    //     <span className="live-text">LIVE</span>
+                                                                    // </div>
                                                                 )}
                                                                 <div className="fw-bold fs-5">
-                                                                    {item.team1_points}-{item.team2_points}
+                                                                    {item.team1_points}-{item.team2_points} <br />
+                                                                    <span style={{ fontSize: "14px", }}>
+                                                                        {/* {timerText} */}
+                                                                    </span>
                                                                 </div>
                                                                 <div className="fw-bold">VS</div>
                                                             </div>
@@ -207,6 +253,7 @@ const Dashboard = () => {
                                                 </div>
                                             );
                                         })
+
                                 ) : (
                                     <div
                                         className="card my-3 text-white border-0"
@@ -288,7 +335,7 @@ const Dashboard = () => {
                         spaceBetween={30}
                         slidesPerView={3}
                         navigation
-                   
+
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 3000, disableOnInteraction: false }}
                         breakpoints={{
@@ -312,7 +359,7 @@ const Dashboard = () => {
                                     />
                                     <div className="card-body">
                                         <h5 className="fw-bold">{team.team_name}</h5>
-                                        <h5 className="text-mute" style={{fontSize:"12px"}}>{team.state}</h5>
+                                        <h5 className="text-mute" style={{ fontSize: "12px" }}>{team.state}</h5>
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -468,9 +515,7 @@ const Dashboard = () => {
         </>
     )
 
-
 }
-
 
 
 export default Dashboard;
